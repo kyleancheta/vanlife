@@ -4,6 +4,10 @@ import avatarImg from "../assets/images/avatar-icon.png"
 
 export default function Header() {
 
+    function fakeLogOut() {
+        localStorage.removeItem("loggedin")
+    }
+
     const activeStyle = {
         textDecoration: "underline",
         color: "#161616"
@@ -22,6 +26,7 @@ export default function Header() {
                         className="login-icon"
                     />
                 </Link>
+                <button onClick={fakeLogOut}>X</button>
             </nav>
         </header>
     )
