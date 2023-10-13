@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, createContext } from 'react'
 import ReactDOM from 'react-dom/client'
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom"
 import Home from "./pages/Home"
@@ -21,39 +21,46 @@ import AuthRequired from './components/AuthRequired'
 
 import "./server"
 
+export const LoggedinContext = createContext(null)
+
 function App() {
+  const [loggedIn, setLoggedIn] = React.useState(
+    () => JSON.parse(localStorage.getItem("loggedin")) || false
+  )
 
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Layout/>}>
-          <Route index element={<Home />}/>
-          <Route path="about" element={<About />}/>
-          <Route path="vans" element={<Vans/>}/>
-          <Route path="vans/:id" element={<VanDetail/>} />
-          <Route
-            path="login"
-            element={<Login />}
-          />
+    <LoggedinContext.Provider value={{loggedIn, setLoggedIn}}>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Layout/>}>
+            <Route index element={<Home />}/>
+            <Route path="about" element={<About />}/>
+            <Route path="vans" element={<Vans/>}/>
+            <Route path="vans/:id" element={<VanDetail/>} />
+            <Route
+              path="login"
+              element={<Login />}
+            />
 
-          <Route element={<AuthRequired/>}>
-            <Route path="host" element={<HostLayout/>}>
-              <Route index element={<Dashboard/>}/>
-              <Route path="income" element={<Income/>}/>
-              <Route path="reviews" element={<Reviews/>}/>
-              <Route path="vans" element={<HostVans/>}/>
-              <Route path="vans/:id" element={<HostVanDetail/>}>
-                <Route index element={<HostVanInfo/>}/>
-                <Route path="photos" element={<HostVanPhotos/>}/>
-                <Route path="pricing" element={<HostVanPricing/>}/>
+            <Route element={<AuthRequired/>}>
+              <Route path="host" element={<HostLayout/>}>
+                <Route index element={<Dashboard/>}/>
+                <Route path="income" element={<Income/>}/>
+                <Route path="reviews" element={<Reviews/>}/>
+                <Route path="vans" element={<HostVans/>}/>
+                <Route path="vans/:id" element={<HostVanDetail/>}>
+                  <Route index element={<HostVanInfo/>}/>
+                  <Route path="photos" element={<HostVanPhotos/>}/>
+                  <Route path="pricing" element={<HostVanPricing/>}/>
+                </Route>
               </Route>
             </Route>
+            
+            <Route path="*" element={<NotFound/>}/>
           </Route>
-          
-          <Route path="*" element={<NotFound/>}/>
-        </Route>
-      </Routes>
-    </BrowserRouter>
+        </Routes>
+      </BrowserRouter>
+    </LoggedinContext.Provider>
   )
 }
 
